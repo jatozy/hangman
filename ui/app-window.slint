@@ -4,6 +4,7 @@ export component AppWindow inherits Window {
     out property <string> secret_word <=> secret_input.text;
     out property <string> guessed_letter <=> guess_input.text;
     in-out property <string> solved_word <=> solved_secret.text;
+    in property <int> user_errors;
 
     callback player1-finished();
     callback player2-guess();
@@ -35,12 +36,16 @@ export component AppWindow inherits Window {
         solved_secret := LineEdit {
             enabled: false;
         }
+        errors_counter := Text {
+            text: "Errors: " + root.user_errors;
+        }
         guess_input := LineEdit {
             input-type: text;
             placeholder-text: "Guess a letter";
         }
         Button {
             text: "Submit Guess";
+            enabled: !guess_input.text.is-empty;
             clicked => {
                 root.player2-guess();
                 guess_input.text = "";

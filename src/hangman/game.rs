@@ -1,14 +1,14 @@
 use std::fmt;
 
 pub struct Game {
-    maximum_errors: usize,
-    happened_errors: usize,
+    maximum_errors: i32,
+    happened_errors: i32,
     secret: String,
     solution: String,
 }
 
 impl Game {
-    pub fn new(secret: &str, maximum_errors: usize) -> Game {
+    pub fn new(secret: &str, maximum_errors: i32) -> Game {
         Game {
             maximum_errors: maximum_errors,
             happened_errors: 0,
@@ -28,6 +28,14 @@ impl Game {
 
     pub fn has_finished(&self) -> bool {
         self.is_game_over() || self.player_has_won()
+    }
+
+    pub fn get_user_errors(&self) -> i32 {
+        return self.happened_errors;
+    }
+
+    pub fn get_solution(&self) -> String {
+        return self.solution.clone();
     }
 
     fn is_game_over(&self) -> bool {
