@@ -1,17 +1,27 @@
-import { Button, VerticalBox } from "std-widgets.slint";
+import { Button, VerticalBox, LineEdit, HorizontalBox } from "std-widgets.slint";
 
 export component AppWindow inherits Window {
-    in-out property <int> counter: 42;
-    callback request-increase-value();
+    out property <string> secret_word <=> secret_input.text;
+    out property <string> guessed_letter: "";
+    in property <string> solved_word: "";
+
+    callback start-guessing();
+
     VerticalBox {
-        Text {
-            text: "Counter: \{root.counter}";
+        HorizontalBox {
+            secret_input := LineEdit {
+                input-type: secret_visibility.pressed ? text : password;
+                placeholder-text: "Enter text here";
+            }
+            secret_visibility := Button {
+                text: "Visibility";
+            }
         }
 
         Button {
-            text: "Increase value";
+            text: "Start Guessing";
             clicked => {
-                root.request-increase-value();
+                root.start-guessing();
             }
         }
     }
