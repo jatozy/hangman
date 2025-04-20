@@ -2,12 +2,14 @@ import { Button, VerticalBox, LineEdit, HorizontalBox } from "std-widgets.slint"
 
 export component AppWindow inherits Window {
     out property <string> secret_word <=> secret_input.text;
-    out property <string> guessed_letter: "";
-    in property <string> solved_word: "";
+    out property <string> guessed_letter <=> guess_input.text;
+    in-out property <string> solved_word <=> solved_secret.text;
 
-    callback start-guessing();
+    callback player1-finished();
+    callback player2-guess();
 
-    VerticalBox {
+    player1_view := VerticalBox {
+        visible: true;
         HorizontalBox {
             secret_input := LineEdit {
                 input-type: secret_visibility.pressed ? text : password;
@@ -21,7 +23,27 @@ export component AppWindow inherits Window {
         Button {
             text: "Start Guessing";
             clicked => {
-                root.start-guessing();
+                root.player1-finished();
+                player1_view.visible = false;
+                player2_view.visible = true;
+            }
+        }
+    }
+
+    player2_view := VerticalBox {
+        visible: false;
+        solved_secret := LineEdit {
+            enabled: false;
+        }
+        guess_input := LineEdit {
+            input-type: text;
+            placeholder-text: "Guess a letter";
+        }
+        Button {
+            text: "Submit Guess";
+            clicked => {
+                root.player2-guess();
+                guess_input.text = "";
             }
         }
     }
