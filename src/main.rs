@@ -1,40 +1,22 @@
-mod hangman;
+// Prevent console window in addition to Slint window in Windows release builds when, e.g., starting the app via file manager. Ignored on other platforms.
+#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use hangman::game::Game;
-use std::io;
-use std::io::Write;
+use std::error::Error;
 
-const MAXIMUM_ERRORS: usize = 3;
+slint::include_modules!();
 
-fn main() {
-    print_text("Please enter the secret word: ");
+fn main() -> Result<(), Box<dyn Error>> {
+    let ui = AppWindow::new()?;
 
-    let secret_word = read_user_input();
-    println!("The secret is >>{secret_word}<<");
+    ui.on_request_increase_value({
+        let ui_handle = ui.as_weak();
+        move || {
+            let ui = ui_handle.unwrap();
+            ui.set_counter(ui.get_counter() + 1);
+        }
+    });
 
-    let mut game = Game::new(&secret_word, MAXIMUM_ERRORS);
+    ui.run()?;
 
-    while game.has_finished() == false {
-        println!("{game}");
-        print_text("Guess a letter: ");
-        let guess = read_user_input();
-        let letter = guess.chars().nth(0).unwrap();
-        game.guess_a_letter(letter);
-    }
-
-    println!("{game}");
-}
-
-fn print_text(text_to_display: &str) {
-    print!("{text_to_display}");
-    io::stdout().flush().unwrap();
-}
-
-fn read_user_input() -> String {
-    let mut user_input = String::new();
-    io::stdin().read_line(&mut user_input).expect(
-        "Failed to read the input. \
-        Please enter a valid word with small letters from a to z.",
-    );
-    return user_input.trim().to_string();
+    Ok(())
 }
