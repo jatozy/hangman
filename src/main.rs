@@ -1,6 +1,6 @@
 mod hangman;
 
-use hangman::hangman::Game;
+use hangman::game::Game;
 use std::io;
 use std::io::Write;
 
