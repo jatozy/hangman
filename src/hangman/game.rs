@@ -38,7 +38,7 @@ impl Game {
         return self.solution.clone();
     }
 
-    fn is_game_over(&self) -> bool {
+    pub fn is_game_over(&self) -> bool {
         self.happened_errors == self.maximum_errors
     }
 

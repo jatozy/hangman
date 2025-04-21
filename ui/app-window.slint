@@ -1,20 +1,32 @@
 import { Button, VerticalBox, LineEdit, HorizontalBox } from "std-widgets.slint";
 
+export enum GameState { setup, play, finish}
+
 export component AppWindow inherits Window {
     out property <string> secret_word <=> secret_input.text;
     out property <string> guessed_letter <=> guess_input.text;
     in-out property <string> solved_word <=> solved_secret.text;
     in property <int> user_errors;
+    in property <bool> game_finished;
+    in property <bool> game_lost;
+    in-out property <GameState> state: setup;
 
     callback player1-finished();
     callback player2-guess();
 
-    player1_view := VerticalBox {
-        visible: true;
+    forward-focus: secret_input;
+
+    VerticalBox {
+        visible: root.state == GameState.setup;
         HorizontalBox {
             secret_input := LineEdit {
                 input-type: secret_visibility.pressed ? text : password;
                 placeholder-text: "Enter text here";
+                accepted(text) => {
+                    root.player1-finished();
+                    root.state = GameState.play;
+                }
+                
             }
             secret_visibility := Button {
                 text: "Visibility";
@@ -25,14 +37,15 @@ export component AppWindow inherits Window {
             text: "Start Guessing";
             clicked => {
                 root.player1-finished();
-                player1_view.visible = false;
-                player2_view.visible = true;
+                root.state = GameState.play;
+                guess_input.focus();
             }
         }
     }
 
-    player2_view := VerticalBox {
-        visible: false;
+    VerticalBox {
+        forward-focus: guess_input;
+        visible: root.state == GameState.play;
         solved_secret := LineEdit {
             enabled: false;
         }
@@ -42,6 +55,13 @@ export component AppWindow inherits Window {
         guess_input := LineEdit {
             input-type: text;
             placeholder-text: "Guess a letter";
+            accepted(text) => {
+                root.player2-guess();
+                guess_input.text = "";
+                if root.game_finished {
+                    root.state = GameState.finish
+                }
+            }
         }
         Button {
             text: "Submit Guess";
@@ -49,7 +69,19 @@ export component AppWindow inherits Window {
             clicked => {
                 root.player2-guess();
                 guess_input.text = "";
+                if root.game_finished {
+                    root.state = GameState.finish
+                }
             }
+        }
+    }
+
+    VerticalBox {
+        visible: root.state == GameState.finish;
+        Text {            
+            text: root.game_lost?"Game Over":"You Won";
+            color: red;
+            horizontal-alignment: center;
         }
     }
 }

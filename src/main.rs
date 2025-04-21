@@ -37,6 +37,8 @@ fn main() -> Result<(), Box<dyn Error>> {
                 game.guess_a_letter(guess.chars().next().unwrap());
                 ui.set_user_errors(game.get_user_errors());
                 ui.set_solved_word(SharedString::from(game.get_solution()));
+                ui.set_game_finished(game.has_finished());
+                ui.set_game_lost(game.is_game_over());
             }
         }
     });
