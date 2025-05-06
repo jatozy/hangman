@@ -11,6 +11,20 @@ export component AppWindow inherits Window {
     in property <bool> game_lost;
     in-out property <GameState> state: setup;
 
+    property<image> image_path: {
+        if user_errors == 0 {
+            return @image-url("../assets/empty.png");
+        } else if user_errors == 1 {
+            return @image-url("../assets/gallow1.png");
+        } else if user_errors == 2 {
+            return @image-url("../assets/gallow2.png");
+        } else if user_errors == 3 {
+            return @image-url("../assets/game_over.png");
+        } else {
+            return @image-url("../assets/error.png"); // fallback
+        }
+    }
+
     callback player1-finished();
     callback player2-guess();
 
@@ -43,45 +57,45 @@ export component AppWindow inherits Window {
         }
     }
 
-    VerticalBox {
+    HorizontalBox {
+        visible: root.state == GameState.play || root.state == GameState.finish;
         forward-focus: guess_input;
-        visible: root.state == GameState.play;
-        solved_secret := LineEdit {
-            enabled: false;
+        Image {
+            source: root.image_path;
+            width: 200px;
+            height: 150px;
         }
-        errors_counter := Text {
-            text: "Errors: " + root.user_errors;
-        }
-        guess_input := LineEdit {
-            input-type: text;
-            placeholder-text: "Guess a letter";
-            accepted(text) => {
-                root.player2-guess();
-                guess_input.text = "";
-                if root.game_finished {
-                    root.state = GameState.finish
+        VerticalBox {
+            forward-focus: guess_input;
+            
+            solved_secret := LineEdit {
+                enabled: false;
+            }
+            errors_counter := Text {
+                text: "Errors: " + root.user_errors;
+            }
+            guess_input := LineEdit {
+                input-type: text;
+                placeholder-text: "Guess a letter";
+                accepted(text) => {
+                    root.player2-guess();
+                    guess_input.text = "";
+                    if root.game_finished {
+                        root.state = GameState.finish
+                    }
                 }
             }
-        }
-        Button {
-            text: "Submit Guess";
-            enabled: !guess_input.text.is-empty;
-            clicked => {
-                root.player2-guess();
-                guess_input.text = "";
-                if root.game_finished {
-                    root.state = GameState.finish
+            Button {
+                text: "Submit Guess";
+                enabled: !guess_input.text.is-empty;
+                clicked => {
+                    root.player2-guess();
+                    guess_input.text = "";
+                    if root.game_finished {
+                        root.state = GameState.finish
+                    }
                 }
             }
-        }
-    }
-
-    VerticalBox {
-        visible: root.state == GameState.finish;
-        Text {            
-            text: root.game_lost?"Game Over":"You Won";
-            color: red;
-            horizontal-alignment: center;
         }
     }
 }
