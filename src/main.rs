@@ -8,6 +8,8 @@ use std::rc::Rc;
 
 slint::include_modules!();
 
+const NUMBER_ERRORS: i32 = 4;
+
 fn main() -> Result<(), Box<dyn Error>> {
     let ui = AppWindow::new()?;
     let logic = Rc::new(RefCell::new(None));
@@ -18,7 +20,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         move || {
             let ui = ui_handle.unwrap();
             let secret = ui.get_secret_word();
-            *player1_logic.borrow_mut() = Some(Game::new(secret.as_str(), 3));
+            *player1_logic.borrow_mut() = Some(Game::new(secret.as_str(), NUMBER_ERRORS));
 
             if let Some(ref mut game) = *player1_logic.borrow_mut() {
                 ui.set_solved_word(SharedString::from(game.get_solution()));

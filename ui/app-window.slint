@@ -13,13 +13,17 @@ export component AppWindow inherits Window {
 
     property<image> image_path: {
         if user_errors == 0 {
-            return @image-url("../assets/empty.png");
+            return @image-url("../assets/start.png");
         } else if user_errors == 1 {
-            return @image-url("../assets/gallow1.png");
+            return @image-url("../assets/error_01.png");
         } else if user_errors == 2 {
-            return @image-url("../assets/gallow2.png");
+            return @image-url("../assets/error_02.png");
         } else if user_errors == 3 {
-            return @image-url("../assets/game_over.png");
+            return @image-url("../assets/error_03.png");
+        } else if user_errors == 4 {
+            return @image-url("../assets/error_last.png");
+        } else if user_errors == 5 {
+            return @image-url("../assets/dead.png");
         } else {
             return @image-url("../assets/error.png"); // fallback
         }
@@ -62,8 +66,8 @@ export component AppWindow inherits Window {
         forward-focus: guess_input;
         Image {
             source: root.image_path;
-            width: 200px;
-            height: 150px;
+            width: 50%;
+            height: 100%;
         }
         VerticalBox {
             forward-focus: guess_input;
