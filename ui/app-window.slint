@@ -29,47 +29,47 @@ export component AppWindow inherits Window {
         }
     }
 
-    property<int> animation_frame: 0;
-    property<image> finish_animation: {
-        if animation_frame == 0 {
-            return @image-url("../assets/error_last_00.png");
-        } else if animation_frame == 1 {
-            return @image-url("../assets/error_last_01.png");
-        } else if animation_frame == 2 {
-            return @image-url("../assets/error_last_02.png");
-        } else if animation_frame == 3 {
-            return @image-url("../assets/error_last_03.png");
-        } else if animation_frame == 4 {
-            return @image-url("../assets/error_last_04.png");
-        } else if animation_frame == 5 {
-            return @image-url("../assets/error_last_05.png");
-        } else if animation_frame == 6 {
-            return @image-url("../assets/error_last_06.png");
-        } else if animation_frame == 7 {
-            return @image-url("../assets/error_last_07.png");
-        } else if animation_frame == 8 {
-            return @image-url("../assets/error_last_08.png");
-        } else if animation_frame == 9 {
-            return @image-url("../assets/error_last_09.png");
-        } else if animation_frame == 10 {
-            return @image-url("../assets/error_last_10.png");
-        } else {
-            return @image-url("../assets/error.png"); // fallback
-        }
-    }
+    // property<int> animation_frame: 0;
+    // property<image> finish_animation: {
+    //     if animation_frame == 0 {
+    //         return @image-url("../assets/error_last_00.png");
+    //     } else if animation_frame == 1 {
+    //         return @image-url("../assets/error_last_01.png");
+    //     } else if animation_frame == 2 {
+    //         return @image-url("../assets/error_last_02.png");
+    //     } else if animation_frame == 3 {
+    //         return @image-url("../assets/error_last_03.png");
+    //     } else if animation_frame == 4 {
+    //         return @image-url("../assets/error_last_04.png");
+    //     } else if animation_frame == 5 {
+    //         return @image-url("../assets/error_last_05.png");
+    //     } else if animation_frame == 6 {
+    //         return @image-url("../assets/error_last_06.png");
+    //     } else if animation_frame == 7 {
+    //         return @image-url("../assets/error_last_07.png");
+    //     } else if animation_frame == 8 {
+    //         return @image-url("../assets/error_last_08.png");
+    //     } else if animation_frame == 9 {
+    //         return @image-url("../assets/error_last_09.png");
+    //     } else if animation_frame == 10 {
+    //         return @image-url("../assets/error_last_10.png");
+    //     } else {
+    //         return @image-url("../assets/error.png"); // fallback
+    //     }
+    // }
 
-    animation_timer:=Timer{
-        interval: 50ms;
-        running: false;
-        triggered() => {
-            if (animation_frame >= 10) {
-                animation_frame=0;
-            }
-            else {
-                animation_frame += 1;
-            }
-        }
-    }
+    // animation_timer:=Timer{
+    //     interval: 50ms;
+    //     running: false;
+    //     triggered() => {
+    //         if (animation_frame >= 10) {
+    //             animation_frame=0;
+    //         }
+    //         else {
+    //             animation_frame += 1;
+    //         }
+    //     }
+    // }
 
     callback player1-finished();
     callback player2-guess();
@@ -90,9 +90,6 @@ export component AppWindow inherits Window {
             }
             secret_visibility := Button {
                 text: "Visibility";
-                clicked => {
-                    animation_timer.running=!animation_timer.running;
-                }
             }
         }
 
@@ -105,11 +102,11 @@ export component AppWindow inherits Window {
             }
         }
 
-        Image {
-            source: root.finish_animation;
-            width: 50%;
-            height: 100%;
-        }
+        // Image {
+        //     source: root.finish_animation;
+        //     width: 50%;
+        //     height: 100%;
+        // }
     }
 
     HorizontalBox {
