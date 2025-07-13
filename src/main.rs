@@ -1,7 +1,8 @@
+use std::io::{self};
+
 fn main() {
     println!("bitte das geheime wort eingeben");
-    let mut raetsel_wort: String = String::new();
-    eingeben(&mut raetsel_wort);
+    let raetsel_wort=eingeben().unwrap();
     let mut loesung: String = String::new();
     for _ in raetsel_wort.chars() {
         loesung.push('_');
@@ -26,9 +27,8 @@ fn main() {
     while loesung.contains('_') && anzahl_fehler < 5 {
         println!("Das Wort ist {loesung}");
         println!("Bisherige Fehler: {anzahl_fehler} von 5");
-        let mut rate_buchstabe = String::new();
         println!("rate einen Buchstaben des Wortes.");
-        eingeben(&mut rate_buchstabe);
+        let rate_buchstabe=eingeben().unwrap();
         if raetsel_wort.contains(&rate_buchstabe) {
             for (position, raetsel_buchstabe) in raetsel_wort.chars().enumerate() {
                 if raetsel_buchstabe.to_string() == rate_buchstabe {
@@ -50,11 +50,10 @@ fn main() {
     }
 }
 
-fn eingeben(resultat: &mut String) {
-    let ergebnis_benutzereingabe = std::io::stdin().read_line(resultat);
-    if ergebnis_benutzereingabe.is_err() {
-        println!("Es ist ein Fehler aufgetreten");
-        return;
-    }
-    resultat.pop();
+fn eingeben()->Result<String, io::Error> {
+    let mut eingabe = String::new();
+    std::io::stdin().read_line(&mut eingabe)?;
+    eingabe.pop();
+    eingabe.pop();
+    return Ok(eingabe);
 }
